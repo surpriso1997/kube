@@ -2,13 +2,17 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: mongo-express-ingress
-spec: 
+spec:
   rules:
-    - host: pylang.ml
+    - host: express.pylang.ml
       http:
         paths:
-          - backend: 
+          - backend:
               serviceName: mongo-express-service
               servicePort: 8081
-
-
+    - host: dashboard.pylang.ml
+      http:
+        paths:
+          - backend:
+              serviceName: kubernetes
+              servicePort: 8443
