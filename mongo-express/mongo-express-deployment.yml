@@ -33,24 +33,25 @@ spec:
                   key: password
             - name: ME_CONFIG_MONGODB_SERVER
               valueFrom:
-                configMapKeyRef: 
+                configMapKeyRef:
                   name: mongodb-configmap
                   key: database-url
 
---- 
-
+---
 apiVersion: v1
 kind: Service
-metadata: 
+metadata:
   name: mongo-express-service
 
-spec: 
+spec:
   selector:
     app: database-dashboard
+  #  type load balancer means this service is an external srvice
   type: LoadBalancer
-  ports: 
+  ports:
     - protocol: TCP
-      port: 8081
-      targetPort: 8081
+      port: 8081 # own port
+      targetPort: 8081 # target container port
+
+      #  port to exposet the service to other pods or outer world (while not using ingress)
       nodePort: 30000
-      
