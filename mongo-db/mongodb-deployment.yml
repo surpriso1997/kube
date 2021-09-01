@@ -1,22 +1,36 @@
+# deploymnet file is the blueprint for creatring a pod
+
 apiVersion: apps/v1
+
+#   type of the config file. The types are Deployment, Secret, ConfigMap
 kind: Deployment
 metadata:
+  # name of the pod
   name: mongo-database
+
+  #  labels is key value pair map with any custom key value. used for identifying the pod in the cluster
   labels:
     app: database
 
 spec:
+  # how many pods do we want to replecate
   replicas: 2
+
+  #  matches the pods with internal and external services
   selector:
+    #  this matchlabels have to be same as the labels in metadata
     matchLabels:
       app: database
   template:
     metadata:
+      # same as matchlabel
       labels:
         app: database
     spec:
       containers:
         - name: mongodb
+
+          #  container name in the registry
           image: mongo
           ports:
             - containerPort: 27017
@@ -32,18 +46,23 @@ spec:
                   name: mongodb-secret
                   key: password
 
---- 
-
+# --- means line document separation in yaml
+---
 apiVersion: v1
+
+# this is internal service. to specify external service, type should be mentioned
 kind: Service
-metadata: 
+metadata:
   name: mongodb-service
 
-spec: 
+spec:
+  #  this slector key value should be same as in meta data of deploymnet
   selector:
     app: database
-  ports: 
+  ports:
     - protocol: TCP
+
+      #  its own port
       port: 27017
+      #  port of the container it connects to
       targetPort: 27017
-      
